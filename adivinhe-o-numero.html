@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Jogo de Adivinhação</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .container {
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 32px;
+      color: #333;
+      margin-bottom: 20px;
+    }
+
+    p {
+      font-size: 18px;
+      color: #666;
+      margin-bottom: 40px;
+    }
+
+    .input-wrapper {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    input {
+      width: 200px;
+      padding: 10px;
+      font-size: 16px;
+      border: none;
+      border-radius: 5px;
+      outline: none;
+    }
+
+    button {
+      background-color: #ffcc00;
+      color: #333;
+      border: none;
+      padding: 10px 20px;
+      font-size: 18px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #ffdd55;
+    }
+
+    .result {
+      font-size: 24px;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Jogo de Adivinhação Futurístico</h1>
+    <p>Pense em um número de 1 a 100 e deixe-me adivinhar!</p>
+    <div class="input-wrapper">
+      <input type="number" id="guessInput" placeholder="Digite o seu número">
+      <button onclick="guessNumber()">Adivinhar</button>
+    </div>
+    <p class="result" id="resultText"></p>
+  </div>
+
+  <script>
+    function guessNumber() {
+      var randomNumber = Math.floor(Math.random() * 100) + 1;
+      var guessInput = document.getElementById('guessInput');
+      var resultText = document.getElementById('resultText');
+      var userGuess = parseInt(guessInput.value);
+
+      if (isNaN(userGuess) || userGuess < 1 || userGuess > 100) {
+        resultText.textContent = 'Por favor, digite um número válido entre 1 e 100.';
+      } else if (userGuess === randomNumber) {
+        resultText.textContent = 'Parabéns! Você acertou!';
+      } else if (userGuess < randomNumber) {
+        resultText.textContent = 'Tente um número maior.';
+      } else {
+        resultText.textContent = 'Tente um número menor.';
+      }
+
+      guessInput.value = '';
+    }
+  </script>
+</body>
+</html>

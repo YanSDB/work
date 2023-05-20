@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Jogo da Velha</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+    }
+
+    h1 {
+      color: #ffcc00;
+    }
+
+    #board {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-gap: 10px;
+      margin-top: 30px;
+      margin-bottom: 30px;
+      max-width: 300px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .cell {
+      width: 100%;
+      height: 100px;
+      background-color: #1a1a1a;
+      color: #fff;
+      font-size: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .winner {
+      background-color: #ffcc00;
+      color: #000;
+    }
+
+    .btn {
+      background-color: #ffcc00;
+      color: #000;
+      padding: 10px 20px;
+      border: none;
+      font-size: 18px;
+      cursor: pointer;
+      border-radius: 5px;
+      transition: background-color 0.3s ease;
+    }
+
+    .btn:hover {
+      background-color: #ffdd55;
+    }
+
+    .table-container {
+      display: flex;
+      justify-content: center;
+      margin-top: 20px;
+    }
+
+    table {
+      background-color: #1a1a1a;
+      color: #fff;
+      border-collapse: collapse;
+      width: 300px;
+      font-size: 16px;
+      border: none;
+    }
+
+    table td {
+      padding: 10px;
+      text-align: center;
+    }
+
+    table th {
+      padding: 10px;
+      text-align: center;
+      background-color: #ffcc00;
+      color: #000;
+    }
+
+    #message {
+      font-weight: bold;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Jogo da Velha</h1>
+  <div class="table-container">
+    <table>
+      <tr>
+        <th colspan="2">Nomes dos Jogadores</th>
+      </tr>
+      <tr>
+        <td>Jogador 1:</td>
+        <td><input type="text" id="player1"></td>
+      </tr>
+      <tr>
+        <td>Jogador 2:</td>
+        <td><input type="text" id="player2"></td>
+      </tr>
+    </table>
+  </div>
+  <div id="board">
+    <div class="cell"></div>
+    <div class="cell"></div>
+    <div class="cell"></div>
+    <div class="cell"></div>
+    <div class="cell"></div>
+    <div class="cell"></div>
+    <div class="cell"></div>
+    <div class="cell"></div>
+    <div class="cell"></div>
+  </div>
+  <button id="restart-btn" class="btn">Reiniciar</button>
+  <div id="message"></div>
+
+  <script>
+    // Variáveis globais
+    let currentPlayer = 'X';
+    let gameEnded = false;
+
+    // Elementos do DOM
+    const cells = Array.from(document.querySelectorAll('.cell'));
+    const restartButton = document.getElementById('restart-btn');
+    const messageElement = document.getElementById('message');
+    const player1Input = document.getElementById('player1');
+    const player2Input = document.getElementById('player2');
+
+    // Função para reiniciar o jogo
+    function restartGame() {
+      currentPlayer = 'X';
+      gameEnded = false;
+      cells.forEach(cell => {
+        cell.innerText = '';
+        cell.classList.remove('winner');
+      });
+      messageElement.innerText = '';
+    }
+
+    // Função para verificar se alguém ganhou o jogo
+    function checkWin() {
+      const winningCombinations = [
+        [0, 1, 2], [3, 4, 5], [6, 7, 8], // Linhas
+        [0, 3, 6], [1, 4, 7], [2, 5, 8], // Colunas
+        [0, 4, 8], [2, 4, 6] // Diagonais
+      ];
+
+      for (let combination of winningCombinations) {
+        const [a, b, c] = combination;
+        if (cells[a].innerText === currentPlayer &&
+            cells[b].innerText === currentPlayer &&
+            cells[c].innerText === currentPlayer) {
+          cells[a].classList.add('winner');
+          cells[b].classList.add('winner');
+          cells[c].classList.add('winner');
+          return true;
+        }
+      }
+
+      return false;
+    }
+
+    // Função para alternar o jogador atual
+    function changePlayer() {
+      currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+    }
+
+    // Função para lidar com o clique em uma célula
+    function handleCellClick(e) {
+      const cell = e.target;
+
+      // Verifica se o jogo já terminou ou se a célula já foi preenchida
+      if (gameEnded || cell.innerText !== '') {
+        return;
+      }
+
+      // Preenche a célula com o símbolo do jogador atual
+      cell.innerText = currentPlayer;
+
+      // Verifica se houve um vencedor
+      if (checkWin()) {
+        gameEnded = true;
+        messageElement.innerText = currentPlayer === 'X' ? player1Input.value + ' venceu!' : player2Input.value + ' venceu!';
+        return;
+      }
+
+      // Verifica se houve empate
+      if (cells.every(cell => cell.innerText !== '')) {
+        gameEnded = true;
+        messageElement.innerText = 'Empate!';
+        return;
+      }
+
+      // Alterna para o próximo jogador
+      changePlayer();
+    }
+
+    // Adiciona os event listeners aos elementos
+    cells.forEach(cell => cell.addEventListener('click', handleCellClick));
+    restartButton.addEventListener('click', restartGame);
+
+    // Inicia o jogo
+    restartGame();
+  </script>
+</body>
+</html>
